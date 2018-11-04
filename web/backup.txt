@@ -1,0 +1,21 @@
+/*var client = new net.Socket();
+  var led = req.query.led || "1";
+  var ligado = req.query.ligado || "1";
+
+  client.connect(5000, '172.20.10.4', function() {
+  	console.log('Connected');
+  	client.write('{ "action": "write", "item": "light' + led + '", "value": ' + ligado +' }');
+    client.end();
+  });
+
+  client.on('data', function(data) {
+  	console.log('Received: ' + data);
+    client.destroy(); // kill client after server's response
+    res.write("OK");
+    res.end();
+  });
+
+  client.on('close', function() {
+	  console.log('Connection closed');
+  });
+  */
