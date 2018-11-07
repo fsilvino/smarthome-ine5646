@@ -1,0 +1,14 @@
+.LightButton {
+    border: 1px solid #ccc;
+    background-color: lightblue;
+    color: rgb(0, 23, 71);
+    font-weight: bold;
+    padding: 25px;
+    cursor: pointer;
+    display: inline-block;
+    margin: 5px;
+}
+
+.LightButtonName {
+    margin-top: 10px;
+}
