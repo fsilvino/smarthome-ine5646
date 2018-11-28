@@ -9,32 +9,56 @@ const espPORT = 5000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/smarthome');
+const Temperature = mongoose.model('Temperature', { date: Date, value: Number });
+
+const moment = require('moment')
+
 app.get('/api/temperature', (req, res) => {
+  var temperature = new Temperature({
+    date: moment().format("DD/MM/YYYY"),
+    value: Math.random()
+  });
+  temperature.save();
+  
   res.setHeader('Content-Type', 'application/json');
   res.send({ temperature: 30.5 });
   res.end();
+
+  // var client = new net.Socket();
+  // client.connect(espPORT, espIP, function() {
+  //   client.write(JSON.stringify({action: 'read', item: 'temperature'}));
+  //   client.end();
+  // });
+
+  // client.on('data', function(data) {
+  //   var response = JSON.parse(data);
+  //   var temperature = new Temperature({
+  //     date: moment().format(),
+  //     temperature: response.value
+  //   });
+  //   temperature.save();
+  //   client.destroy();
+  //   res.setHeader('Content-Type', 'application/json');
+  //   res.send({ temperature: response.value });
+  //   res.end();
+  // });
 });
 
-app.get('/api/last-temperatures', function (req, res) {
-  res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify([
-    { date: "20/10/2018", max: 29, min: 23 },
-    { date: "21/10/2018", max: 27, min: 20 },
-    { date: "22/10/2018", max: 31.5, min: 26 },
-    { date: "23/10/2018", max: 30.5, min: 24 },
-    { date: "24/10/2018", max: 31, min: 21 },
-    { date: "25/10/2018", max: 32, min: 22 },
-    { date: "26/10/2018", max: 30, min: 20 },
-    { date: "27/10/2018", max: 31, min: 19.5 },
-    { date: "28/10/2018", max: 28.5, min: 14 },
-    { date: "29/10/2018", max: 27, min: 19.4 },
-    { date: "30/10/2018", max: 29.3, min: 16 },
-    { date: "31/10/2018", max: 24, min: 19 },
-    { date: "01/11/2018", max: 28, min: 10 },
-    { date: "02/11/2018", max: 32, min: 18 },
-    { date: "03/11/2018", max: 29, min: 20 }
-  ]));
-  res.end();
+app.get('/api/last-temperatures', (req, res) => {
+  
+  temperatures = Temperature.aggregate([{
+    $group: {
+      _id: '$date',
+      max: { $max: '$value' },
+      min: { $min: '$value' }
+    }
+  }]).exec((err, result) => {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(result);
+      res.end();
+  });
 });
 
 app.get('/api/light/:led', function (req, res) {
