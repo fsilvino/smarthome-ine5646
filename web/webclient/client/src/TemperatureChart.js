@@ -25,8 +25,8 @@ class TemperatureChart extends Component {
         .then((res) => {
           this.setState( { chartData: this.processData(res) } );
           setTimeout(() => this.updateData(), 3000);
-        });
-        //.then(err => console.log(err));
+        })
+        .catch(err => console.log(err));
   }
 
   loadData = async () => {

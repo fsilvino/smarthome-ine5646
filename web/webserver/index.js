@@ -1,6 +1,5 @@
 var express = require('express');
 var app = express();
-var net = require('net');
 
 app.get('/', function (req, res) {
   res.send('Hello World!');

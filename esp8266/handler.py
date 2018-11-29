@@ -16,7 +16,6 @@ class Handler:
                 self.processRead()
             elif self.json["action"] == 'write':
                 self.processWrite()
-
             if self.status == 0:
                 self.success()
         except Exception as e:
@@ -28,35 +27,25 @@ class Handler:
     def processRead(self):
         if self.json["item"] == 'temperature':
             self.readTemperature()
-        elif self.json["item"] == 'light1':
-            self.readLight1Value()
-        elif self.json["item"] == 'light2':
-            self.readLight2Value()
+        elif self.json["item"] == 'light':
+            self.readLightValue()
         else:
             self.invalidOperation()
 
     def processWrite(self):
-        if self.json["item"] == 'light1':
-            self.writeLight1Value()
-        elif self.json["item"] == 'light2':
-            self.writeLight2Value()
+        if self.json["item"] == 'light':
+            self.writeLightValue()
         else:
             self.invalidOperation()
 
     def readTemperature(self):
         self.value = self.manager.readTemperature()
 
-    def readLight1Value(self):
-        self.value = self.manager.readLight1Value()
+    def readLightValue(self):
+        self.value = self.manager.readLightValue()
 
-    def readLight2Value(self):
-        self.value = self.manager.readLight2Value()
-
-    def writeLight1Value(self):
-        self.manager.writeLight1Value(self.json["value"])
-
-    def writeLight2Value(self):
-        self.manager.writeLight2Value(self.json["value"])
+    def writeLightValue(self):
+        self.manager.writeLightValue(self.json["value"])
 
     def success(self):
         self.status = 1

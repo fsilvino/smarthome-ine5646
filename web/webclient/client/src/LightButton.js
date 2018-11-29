@@ -7,12 +7,12 @@ class LightButton extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { value: false };
+    this.state = { value: 0 };
     this.updateLightState();
   }
 
   isOn() {
-    return this.state.value == 1;
+    return this.state.value === 1;
   }
 
   getButtonImage() {
@@ -30,24 +30,27 @@ class LightButton extends Component {
   }
 
   loadState = async () => {
-    const response = await fetch('/api/light/' + this.props.lampId);
+    const response = await fetch(this.props.url + '/api/light/' + this.props.lampId);
     const body = await response.json();
 
     if (response.status !== 200) throw Error(body.message);
 
     return body;
-  }
+  };
 
   updateLightState() {
     this.loadState()
         .then((res) => {
           this.setState({ value: res.value });
           setTimeout(() => this.updateLightState(), 10000);
+        })
+        .catch((err) => {
+          console.log(err.message);
         });
   }
 
   sendCommand = async () => {
-    var value = this.state.value == 1 ? 0 : 1;
+    var value = this.state.value === 1 ? 0 : 1;
     console.log(value);
     var led = this.props.lampId;
 
@@ -56,7 +59,7 @@ class LightButton extends Component {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ led: led, state: value })
+      body: JSON.stringify({ led: led, state: value, boardId: this.props.boardId})
     });
     const body = await response.json();
 
@@ -69,8 +72,8 @@ class LightButton extends Component {
     this.sendCommand()
       .then((res) => {
         this.setState({ value: res.value });
-      });
-      //.then(err => console.log(err));
+      })
+      .catch(err => console.log(err));
   }
 
   render() {
