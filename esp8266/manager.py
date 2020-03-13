@@ -5,8 +5,11 @@ class Manager:
 
     def readTemperature(self):
         analogValue = config.pinThermometer.read()
+        print("readTemperature: analogValue = ", analogValue)
         mV = (analogValue / 1024.0) * 3300
+        print("readTemperature: mV = ", mV)
         celsius = mV / 10
+        print("readTemperature: celsius = ", celsius)
         return celsius
 
     def readLight1Value(self):

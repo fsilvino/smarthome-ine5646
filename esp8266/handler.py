@@ -12,6 +12,7 @@ class Handler:
 
     def process(self):
         try:
+            print("Processing JSON: ", self.json)
             if self.json["action"] == 'read':
                 self.processRead()
             elif self.json["action"] == 'write':
@@ -23,7 +24,7 @@ class Handler:
             self.status = 3
             self.value = 0
             self.message = e.strerror
-            pass
+            # pass
 
     def processRead(self):
         if self.json["item"] == 'temperature':
